@@ -1,4 +1,4 @@
 package serverPackage;
 
-public class timer {
+public class Timer {
 }
