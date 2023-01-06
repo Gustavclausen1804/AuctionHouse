@@ -21,7 +21,7 @@ public class Auction {
             throw new RuntimeException(e);
         }
         int topBid = item.getStartingPrice();
-        String topUser;
+        String topUser = "";
         while (currentTimeMillis() < item.getEndTime()) {
             try {
                 Object[] bid = auctionSpace.get(new FormalField(String.class),new FormalField(Integer.class),new FormalField(Long.class));
@@ -34,5 +34,6 @@ public class Auction {
                 throw new RuntimeException(e);
             }
         }
+        System.out.println("Sold for " + topBid + " kr to " + topUser);
     }
 }
