@@ -58,6 +58,18 @@ public class User {
         this.userSpace = userSpace;
     }
 
+    public void putUsertoServer(RemoteSpace space) { // put UserInfo to its own repository. space should be addresse/userID)
+        Object[] userInfo = {userId, userName, userAddress};
+
+        try {
+            space.put(userInfo);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
 
 
