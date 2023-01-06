@@ -20,7 +20,7 @@ public class View {
         // TODO: print the two options
 
         // TODO: ReadInput
-        Controller.chooseOption(optionNumber);
+        //Controller.chooseOption(optionNumber);
 
 
 
