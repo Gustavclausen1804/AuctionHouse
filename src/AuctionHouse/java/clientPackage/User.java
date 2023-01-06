@@ -59,7 +59,7 @@ public class User {
     }
 
     public void putUsertoServer(RemoteSpace space) { // put UserInfo to its own repository. space should be addresse/userID)
-        Object[] userInfo = {userId, userName, userAddress};
+        Object[] userInfo = {userName, userAddress, userTimeStamp};
 
         try {
             space.put(userInfo);

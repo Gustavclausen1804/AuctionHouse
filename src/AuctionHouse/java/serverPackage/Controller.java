@@ -1,10 +1,7 @@
 package serverPackage;
 
 
-import org.jspace.FormalField;
-import org.jspace.QueueSpace;
-import org.jspace.SequentialSpace;
-import org.jspace.SpaceRepository;
+import org.jspace.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,6 +9,7 @@ import java.net.URISyntaxException;
 public class Controller implements Runnable{
     SpaceRepository repo = new SpaceRepository();
     SequentialSpace lobby = new SequentialSpace();
+    SequentialSpace usersSpace = new SequentialSpace();
     QueueSpace auctionSpace = new QueueSpace();
     QueueSpace newAuctions = new QueueSpace();
     int counter = 0;
@@ -22,7 +20,9 @@ public class Controller implements Runnable{
             repo.add("lobby", lobby);
             repo.add("auctionSpace", auctionSpace);
             repo.add("newAuctions", newAuctions);
+            repo.add("users", usersSpace);
             lobby.put(Lobby.generateOptions());
+            getNewUserRequest();
             lobbyChoice();
             generateNewListings();
             openGate();
@@ -79,4 +79,18 @@ public class Controller implements Runnable{
             }
         }).start();
     }
+
+    public void getNewUserRequest() {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Object[] newUserRequest = usersSpace.get(new FormalField(String.class), new FormalField(String.class), new FormalField(Long.class));
+                    User user = new User((String) newUserRequest[0], (String) newUserRequest[1], (Long) newUserRequest[2], repo, usersSpace);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 }
