@@ -38,12 +38,13 @@ public class Controller implements Runnable{
                 try {
                     counter++;
                     QueueSpace auctionN = new QueueSpace();
-                    repo.add("auction" + counter, auctionN);
+                    repo.add( "auction" + counter, auctionN);
                     Object[] newInput = newAuctions.get(new FormalField(String.class),new FormalField(String.class), new FormalField(Integer.class));
                     Item item = new Item((String) newInput[0], (String) newInput[1], (int) newInput[2]);
-                    auctionSpace.put(item);
-                    auctionN.put(item);
+                    auctionSpace.put(counter, item);
                     System.out.println(item.getName());
+                    System.out.println("auction" + counter);
+                    auctionN.put("Starting bid:" + item.getStartingPrice());
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
