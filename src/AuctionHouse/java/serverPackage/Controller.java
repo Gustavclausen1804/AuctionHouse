@@ -23,6 +23,7 @@ public class Controller implements Runnable{
             repo.add("auctionSpace", auctionSpace);
             repo.add("newAuctions", newAuctions);
             lobby.put(Lobby.generateOptions());
+            lobbyChoice();
             generateNewListings();
             openGate();
         } catch (InterruptedException e) {
@@ -61,4 +62,21 @@ public class Controller implements Runnable{
         }
     }
 
+    public void lobbyChoice() {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Object[] choice = lobby.get(new FormalField(Integer.class), new FormalField(String.class));
+                    if ((int) choice[0] == 1) {
+                        lobby.put("auctionSpace",choice[1]);
+                    }
+                    else if ((int) choice[0] == 2) {
+                        lobby.put("newAuctions",choice[1]);
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+    }
 }
