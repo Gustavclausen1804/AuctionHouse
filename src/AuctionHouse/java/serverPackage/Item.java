@@ -28,4 +28,8 @@ public class Item {
     public int getStartingPrice() {
         return startingPrice;
     }
+
+    public long getEndTime() {
+        return endTime;
+    }
 }
