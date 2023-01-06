@@ -43,7 +43,6 @@ public class Controller implements Runnable{
                     Item item = new Item((String) newInput[0], (String) newInput[1], (int) newInput[2]);
                     auctionSpace.put(counter, item);
                     System.out.println(item.getName());
-                    System.out.println("auction" + counter);
                     auctionN.put("Starting bid:" + item.getStartingPrice());
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
