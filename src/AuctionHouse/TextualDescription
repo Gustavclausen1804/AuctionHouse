@@ -1,0 +1,59 @@
+// Protocol for bidding //
+
+Client.makeBid(Client,bid) -> Server.Vtupple(Client,bid)
+if max(Vtupple(Client)) @Server then
+    Server.update(maxBid) -> Client.("getBid")
+    Client.("getResponse") -> server.request("getResponse")
+else
+    Server.("Bid too low") -> Client.response(string)
+Client("getMaxBid") -> server.request("getMaxBid")
+
+
+
+
+
+// SPØRG (TA) : Benjamin eller magnus
+
+// Server projection // pt.2
+Server:
+
+    maxBid := channel(Server, Client).get(Client, bid)
+    if max(maxBid) then
+        channel(Server, Client).put("then")
+        bidChannel(Server).put(maxBid)
+        channel(Server, Client).put("Your bid is currently max")
+    else
+        channel(Server, Client).put("else")
+        channel(Server, Client).put("bid too low")
+    channel(Server, Client).put("getMaxBid")
+
+Client:
+
+   / maxBid := channel(Client, Server).put(Client, bid)
+   / branch := channel(Server, Client).get(string)
+   / if branch == "then" then
+   /     channel(Client, Server).get(string)
+   / else
+
+
+    maxBid := channel(Client, Server).put(Client, bid)
+    channel(Client, Server).get(string)
+
+
+
+
+
+
+// Server projection // pt.1
+
+project(biddigProtocol, Server)
+
+project(Line1 ; Line2to6)
+
+project(Line1, Server)
+project(Line2to6, Server)
+
+project(Client.makeBid(Client,bid) -> Server.Vtupple(Client,bid), Server) ;
+project(Line2to6)
+
+channel(Server, Client).put(Client, bid) ;
