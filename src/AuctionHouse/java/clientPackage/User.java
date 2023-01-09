@@ -10,12 +10,11 @@ public class User {
     Space userSpace;
 
 
-    public User(String userId, String userName, String userAddress, long userTimeStamp, Space userSpace) {
-        this.userId = userId;
+    public User(String userName, String userAddress, long userTimeStamp) {
+//        this.userId = userId;
         this.userName = userName;
         this.userAddress = userAddress;
         this.userTimeStamp = userTimeStamp;
-        this.userSpace = userSpace;
     }
 
     public String getUserId() {
@@ -59,7 +58,7 @@ public class User {
     }
 
     public void putUsertoServer(RemoteSpace space) { // put UserInfo to its own repository. space should be addresse/userID)
-        Object[] userInfo = {userId, userName, userAddress};
+        Object[] userInfo = {userName, userAddress, userTimeStamp};
 
         try {
             space.put(userInfo);
