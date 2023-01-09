@@ -86,6 +86,8 @@ public class Controller implements Runnable{
                 try {
                     Object[] newUserRequest = usersSpace.get(new FormalField(String.class), new FormalField(String.class), new FormalField(Long.class));
                     User user = new User((String) newUserRequest[0], (String) newUserRequest[1], (Long) newUserRequest[2], repo, usersSpace);
+                    System.out.println(user.userId + " " + user.userAddress + " " + user.userTimeStamp + " " + user.userSpace);
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

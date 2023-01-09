@@ -17,14 +17,25 @@ import static java.lang.Integer.parseInt;
 public class TestClient implements Runnable {
     RemoteSpace lobbySpace;
     RemoteSpace auctionSpace;
+    RemoteSpace usersSpace;
     Object[] lobbyChoice;
     BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
     String uri;
     String name;
     public void run() {
+        try {
+            uri = "tcp://127.0.0.1:9001/";
+            usersSpace = new RemoteSpace(uri + "users?keep");
+            String[] userCreationInput = View.displayUsercreation();
+            User user = new User(userCreationInput[0], userCreationInput[1], System.currentTimeMillis());
+            user.putUsertoServer(usersSpace);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         lobbySelection();
         bidding();
         submitting();
+
     }
     public void lobbySelection() {
         try {
@@ -33,8 +44,12 @@ public class TestClient implements Runnable {
             uri = "tcp://127.0.0.1:9001/";
 
             lobbySpace = new RemoteSpace(uri + "lobby?keep");
+
+
             System.out.print("Enter your name: ");
             name = input.readLine();
+
+
             Object[] choices = lobbySpace.query(new FormalField(String.class),new FormalField(String.class));
             for (Object choice : choices) {
                 System.out.println((String) choice);

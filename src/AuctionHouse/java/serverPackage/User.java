@@ -1,5 +1,6 @@
 package serverPackage;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.jspace.*;
 
 import java.net.URI;
@@ -38,13 +39,23 @@ public class User {
     public String getUserIDfromServer(Space usersSpace) throws InterruptedException {
 
 
-        Object[] usersCount = usersSpace.get(new FormalField(String.class), new FormalField(Integer.class));
-        int count = (int) usersCount[1] + 1;
-        usersSpace.put(usersCount[0], count);
+        Object[] usersCount = usersSpace.getp(new FormalField(String.class), new FormalField(Integer.class));
+        if (usersCount != null) {
+
+            int count = (int) usersCount[1] + 1;
+            usersSpace.put(usersCount[0], count);
+            return "" + count;
+        } else {
+
+            usersSpace.put("users", 1);
+            return "" + 1;
 
 
-     return "" + count;
+        }
+
+
     }
+
 
     }
 
