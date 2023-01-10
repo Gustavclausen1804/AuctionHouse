@@ -105,3 +105,52 @@ par
 
 
 rap
+
+
+
+// nyt forsøg
+
+
+
+par
+
+/* init:
+  wallet_1.put(0);
+  wallet_2.put(2)
+  time_token.put(-1);
+  sellerInventory.put(-2)
+
+
+*/
+par
+
+  wallet_1.get(0)
+  wallet_2.get(0)
+  walletHolder_1.put(0);
+  walletHolder_2.put(2);
+
+[]
+
+  loop true -> walletHolder_1.get(0);
+               bidPlaced.put(0)
+  pool
+
+[]
+  loop true -> walletHolder_2.get(0);
+               bidPlaced.put(0)
+  pool
+
+[]
+  loop true -> bidPlaced.get(0);
+               wallet_2.put(0)
+  pool
+
+[]
+  loop true -> Time_token.get(-1);
+               bidPlaced.get(0);
+               sellerwallet.put(0);
+               sellerInventory.get(-2);
+               buyer_inventory.put(-2)
+  pool
+
+rap
