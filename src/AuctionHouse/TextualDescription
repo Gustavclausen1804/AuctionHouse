@@ -57,3 +57,51 @@ project(Client.makeBid(Client,bid) -> Server.Vtupple(Client,bid), Server) ;
 project(Line2to6)
 
 channel(Server, Client).put(Client, bid) ;
+
+
+
+
+// Informal description
+
+
+
+
+par
+
+  walletHolder_1.put(0);
+  walletHolder_2.put(0);
+  time.put(0);
+  sellerInventory.put(0)
+
+[]
+
+  loop true -> walletHolder_1.get(0);
+               bidPlaced.put(0)
+  pool
+
+[]
+  loop true -> walletHolder_2.get(0);
+               minimum_bid_userID.put(0)
+  pool
+
+[]
+  loop true -> Time_token.get(0);
+               bidPlaced.get(0);
+               sellerwallet.put(0);
+               buyer_inventory.put(0)
+  pool
+
+[]
+  loop true -> sellerwallet.get(0)
+  pool
+
+[]
+  loop true -> buyer_inventory.get(0)
+  pool
+
+[]
+  loop true -> reserveItem.get(0)
+  pool
+
+
+rap
