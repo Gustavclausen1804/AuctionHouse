@@ -15,25 +15,27 @@ public class Auction {
     }
 
     public void startAuction() {
-        try {
-            auctionSpace.put("Starting bid: " + item.getStartingPrice());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        int topBid = item.getStartingPrice();
-        String topUser = "";
-        while (currentTimeMillis() < item.getEndTime()) {
+        new Thread(() -> {
             try {
-                Object[] bid = auctionSpace.get(new FormalField(String.class),new FormalField(Integer.class),new FormalField(Long.class));
-                if ((int) bid[1] > topBid) {
-                    topBid = (int) bid[1];
-                    topUser = (String) bid[0];
-                    System.out.println("Current top bid: " + topBid + "by " + topUser);
+                auctionSpace.put("Starting bid: " + item.getStartingPrice());
+                int topBid = item.getStartingPrice();
+                String topUser = "";
+                while (currentTimeMillis() < item.getEndTime()) {
+                    try {
+                        Object[] bid = auctionSpace.get(new FormalField(String.class),new FormalField(Integer.class),new FormalField(Long.class));
+                        if ((int) bid[1] > topBid) {
+                            topBid = (int) bid[1];
+                            topUser = (String) bid[0];
+                            System.out.println("Current top bid: " + topBid + "by " + topUser);
+                        }
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
+                System.out.println("Sold for " + topBid + " kr to " + topUser);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
-        }
-        System.out.println("Sold for " + topBid + " kr to " + topUser);
+        }).start();
     }
 }
