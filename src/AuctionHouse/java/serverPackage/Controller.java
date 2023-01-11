@@ -62,6 +62,8 @@ public class Controller implements Runnable{
         }
     }
 
+
+
     public void lobbyChoice() {
         new Thread(() -> {
             while (true) {
@@ -72,6 +74,10 @@ public class Controller implements Runnable{
                     }
                     else if ((int) choice[0] == 2) {
                         lobby.put("newAuctions",choice[1]);
+                    }
+                    else if ((int) choice[0] == 3) {
+                        System.out.println(choice[1] + "wallet");
+                        lobby.put(choice[1] + "wallet",choice[1]);
                     }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -86,13 +92,15 @@ public class Controller implements Runnable{
                 try {
                     Object[] newUserRequest = usersSpace.get(new FormalField(String.class), new FormalField(String.class), new FormalField(Long.class));
                     User user = new User((String) newUserRequest[0], (String) newUserRequest[1], (Long) newUserRequest[2], repo, usersSpace);
+                    usersSpace.put(user.userId,user.userName);
                     System.out.println(user.userId + " " + user.userAddress + " " + user.userTimeStamp + " " + user.userSpace);
-
+                    SequentialSpace wallet = new SequentialSpace();
+                    repo.add((String) newUserRequest[0] + "wallet",wallet);
+                    wallet.put(0);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
     }
-
 }
