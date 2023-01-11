@@ -319,3 +319,72 @@ par
 
 rap
 
+// distributed realization:
+
+make_bid_1:
+    while(true){
+        wallet_1.get("token")
+        //logic
+        walletHolder_1.get("token")
+    }
+
+make_bid_2:
+    while(true){
+        wallet_2.get("token")
+        //logic
+        walletHolder_2.get("token")
+    }
+
+conditions_metOrNot(for wallet_1):
+    while(true){
+        if(conditions){
+            bidPlaced.put("token")
+        } else {
+            wallet_1.put("token")
+        }
+    }
+
+conditions_metOrNot(for wallet_2):
+    while(true){
+        if(conditions){
+            bidPlaced.put("token")
+        } else {
+            wallet_2.put("token")
+        }
+    }
+
+pullToken(wallet_1):
+    while(true){
+            loserToken_1.get("token")
+            bidPlaced.get("token")
+            //logic
+            wallet_1.put("token")
+        }
+
+pullToken(wallet_2):
+    while(true){
+            loserToken_2.get("token")
+            bidPlaced.get("token")
+            //logic
+            wallet_2.put("token")
+        }
+
+winningBid:
+    while(true){
+            Time_token.get("token")
+            bidPlaced.get("token")
+            sellerInventory.get("token")
+            //logic
+            reserveItem.put("token")
+            temp_buyer_inventory.put("token")
+            seller_wallet.put("token")
+
+        }
+
+get_Item:
+    while(true){
+            temp_buyer_inventory.get("token")
+            reserveItem.get("token")
+            //logic
+            buyer_inventory.put("token")
+        }
