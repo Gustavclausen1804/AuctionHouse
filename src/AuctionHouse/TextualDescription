@@ -154,3 +154,168 @@ par
   pool
 
 rap
+
+
+
+
+
+// pt 2
+
+par
+
+
+
+    wallet_1.put(0);
+    wallet_2.put(0);
+
+
+
+
+    wallet_1.get(0);
+
+    walletHolder_1.put(0)
+
+
+
+[]
+
+
+
+    walletHolder_1.get(0);
+
+    bidPlaced.put(0)
+
+
+
+[]
+    loop true ->
+
+    wallet_2.get(0);
+
+    walletHolder_2.put(0)
+
+    pool
+
+[]
+    loop true ->
+
+    walletHolder_2.get(0);
+
+    bidPLaced.put(0)
+
+    pool
+[]
+    loop true ->
+
+    bidPlaced.get(0);
+
+    wallet_2.put(0)
+
+    pool
+
+[]
+
+    time_token.put(0)
+
+[]
+
+
+    time_token.get(0);
+    bidPlaced.get(0);
+
+    seller_wallet.put(0);
+    temp_buyer_inventory.put(0)
+
+
+
+[]
+
+
+    temp_buyer_inventory.get(0);
+    Reserveitem.get(0);
+
+    buyer_inventory.put(0)
+
+
+
+
+[]
+
+    sellerinventory.put(0)
+
+[]
+
+
+    sellerinventory.get(0);
+    reserveItem.put(0)
+
+
+
+rap
+
+
+
+// pt. 3
+
+
+
+par
+
+    wallet_1.put(0);
+    wallet_2.put(0);
+
+
+    wallet_1.get(0);
+
+    walletHolder_1.put(0)
+
+[]
+    walletHolder_1.get(0);
+
+    bidPlaced.put(0)
+
+[]
+    wallet_2.get(0);
+
+    walletHolder_2.put(0)
+
+[]
+    walletHolder_2.get(0);
+
+    bidPLaced.put(0)
+
+[]
+    bidPlaced.get(0);
+
+    wallet_2.put(0)
+
+[]
+
+    time_token.put(0)
+
+[]
+
+    time_token.get(0);
+    bidPlaced.get(0);
+
+    seller_wallet.put(0);
+    temp_buyer_inventory.put(0)
+
+[]
+    temp_buyer_inventory.get(0);
+    Reserveitem.get(0);
+
+    buyer_inventory.put(0)
+
+
+[]
+
+    sellerinventory.put(0)
+
+[]
+
+    sellerinventory.get(0);
+    reserveItem.put(0)
+
+rap
+
