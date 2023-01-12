@@ -1,0 +1,38 @@
+par
+   loop true -> wallet_2.get(0);
+                walletHolder_2.put(0)
+   pool
+[]
+   loop true -> wallet_1.get(0);
+                walletHolder_1.put(0)
+   pool
+[]
+   loop true -> walletHolder_1.get(0);
+                bidPlaced.put(0)
+   pool
+[]
+   loop true -> walletHolder_2.get(0);
+                bidPlaced.put(0)
+   pool
+[]
+   loop true -> loserToken.get(0);
+                bidPlaced.get(0);
+                wallet_2.put(0);
+                loserToken.put(0)
+   pool
+[]
+   loop true -> time_token.get(0);
+                bidPlaced.get(0);
+                temp_buyer_inventory.put(0)
+   pool
+[]
+   loop true -> sellerInventory.get(0);
+                ReserveItem.put(0)
+   pool
+[]
+   loop true -> temp_buyer_inventory.get(0);
+                ReserveItem.get(0);
+                buyer_inventory.put(0);
+                sellerWallet.put(0)
+   pool
+rap
