@@ -1,12 +1,53 @@
 // Protocol for bidding //
 
-Client.makeBid(Client,bid) -> Server.Vtupple(Client,bid)
-if max(Vtupple(Client)) @Server then
-    Server.update(maxBid) -> Client.("getBid")
-    Client.("getResponse") -> server.request("getResponse")
+Client.(Client,bid) -> Server.Vtuple(String,int); //id & bid
+if max(Vtuple) @Server then
+    Server.("your bid is max") -> Client.status(String)
 else
-    Server.("Bid too low") -> Client.response(string)
-Client("getMaxBid") -> server.request("getMaxBid")
+    Server.("Bid too low") -> Client.status(string)
+Server.(getMaxBid()) -> Client.maxBid(int)
+
+// Lav protokol over en hel auktion for en client når han byder.
+
+
+
+// Seller transfers item to ReserveItem. kommentar.
+// race condition: hvem kom først? hvem vinder auktionen hvis de har samme bud?
+// wallstreet, kabler, tættere på = hurtigere
+// hvorfor har vi gjort sådan?
+
+Client.(Client,bid) -> Server.clientBid(String,int);
+server.("getTime") -> TimeProvider.request("getTime");
+timeProvider.(getTime()) -> server.currentTime(Long);
+
+while AuctionNotDoneAndIsMax(clientBid) @Server do {
+    Server.("your bid is max") -> Client.status(String);
+}
+  if(AuctionDone()) @server then {
+        Server.(getMaxBid())-> Seller.wallet(int);
+        Server.(TransferItem()) -> Client.inventory(String)
+    } else {
+        Server.("Bid too low") -> Client.status(string)
+        Server.(getMaxBid()) -> Client.maxBid(int)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
