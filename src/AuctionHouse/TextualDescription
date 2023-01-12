@@ -324,32 +324,39 @@ rap
 make_bid_1:
     while(true){
         wallet_1.get("token")
-        //logic
-        walletHolder_1.get("token")
+        // Withdraw money from wallet, to ensure client can't bid on two things at once with limited budget.
+        walletHolder_1.put("token")
     }
 
 make_bid_2:
     while(true){
         wallet_2.get("token")
-        //logic
-        walletHolder_2.get("token")
+        // Withdraw money from wallet, to ensure client can't bid on two things at once with limited budget.
+        walletHolder_2.put("token")
+
     }
 
 conditions_metOrNot(for wallet_1):
     while(true){
-        if(conditions){
+        walletHolder_1.get("token");
+        if(conditions){ // Check if bid is above current highest bid & within timelimit.
             bidPlaced.put("token")
+            // Place the new highest bid.
         } else {
             wallet_1.put("token")
+            // return money to the wallet.
         }
     }
 
 conditions_metOrNot(for wallet_2):
     while(true){
+        walletHolder_2.get("token"); // Check if bid is above current highest bid & within timelimit.
         if(conditions){
             bidPlaced.put("token")
+            // Place the new highest bid.
         } else {
             wallet_2.put("token")
+            // return money to the wallet.
         }
     }
 
@@ -357,34 +364,41 @@ pullToken(wallet_1):
     while(true){
             loserToken_1.get("token")
             bidPlaced.get("token")
-            //logic
-            wallet_1.put("token")
+            // Return previous highest bid to bidder's wallet.
+             wallet_1.put("token")
         }
 
 pullToken(wallet_2):
-    while(true){
+    while(true) {
             loserToken_2.get("token")
             bidPlaced.get("token")
-            //logic
+            // Return previous highest bid to bidder's wallet.
             wallet_2.put("token")
         }
 
 winningBid:
     while(true){
-            Time_token.get("token")
-            bidPlaced.get("token")
-            sellerInventory.get("token")
-            //logic
-            reserveItem.put("token")
+            Time_token.get("token") // Token available when auction time ends.
+            bidPlaced.get("token") // Gets the maximum bid.
+            // Transfer the money to seller's wallet.
+            // and give signal to transfer item to buyer.
             temp_buyer_inventory.put("token")
             seller_wallet.put("token")
 
         }
 
+transferItem:
+    while(true) {
+                sellerInventory.get("token")
+                // Reserve the item from the seller.
+                // To avoid he can sell the item serveral times while autciton is active.
+                reserveItem.put("token")
+    }
+
 get_Item:
     while(true){
             temp_buyer_inventory.get("token")
             reserveItem.get("token")
-            //logic
+            // Transfer the item to buyer's inventory.
             buyer_inventory.put("token")
         }
