@@ -407,6 +407,7 @@ pullToken(wallet_1):
             bidPlaced.get("token")
             // Return previous highest bid to bidder's wallet.
              wallet_1.put("token")
+
         }
 
 pullToken(wallet_2):
