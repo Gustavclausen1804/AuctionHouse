@@ -358,6 +358,7 @@ pullToken(wallet_1):
             loserToken_1.get("token")
             bidPlaced.get("token")
             //logic
+            // skriv hvad der sker inde mellem de to get og put
             wallet_1.put("token")
         }
 
