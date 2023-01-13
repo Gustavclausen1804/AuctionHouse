@@ -1,0 +1,14 @@
+Client.(Client,bid) -> Server.clientBid(String,int);
+server.("getTime") -> TimeProvider.request("getTime");
+timeProvider.(getTime()) -> server.currentTime(Long);
+
+while AuctionNotDoneAndIsMax(clientBid) @Server do {
+    Server.("your bid is max") -> Client.status(String);
+}
+  if (AuctionDone()) @server then {
+        Server.(getMaxBid())-> Seller.wallet(int);
+        Server.(TransferItem()) -> Client.inventory(String)
+    } else {
+        Server.("Bid too low") -> Client.status(string)
+        Server.(getMaxBid()) -> Client.maxBid(int)
+}
