@@ -55,7 +55,7 @@ public class Controller implements Runnable{
         try {
             String uri = "tcp://127.0.0.1:9001/?keep";
             URI myUri = new URI(uri);
-            String gateUri = "tcp://" + myUri.getHost() + ":" + myUri.getPort() +  "?keep" ;
+            String gateUri = "tcp://" + myUri.getHost() + ":" + myUri.getPort() +  "?keep";
             repo.addGate(gateUri);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
@@ -95,7 +95,7 @@ public class Controller implements Runnable{
                     usersSpace.put(user.userId,user.userName);
                     System.out.println(user.userId + " " + user.userAddress + " " + user.userTimeStamp + " " + user.userSpace);
                     SequentialSpace wallet = new SequentialSpace();
-                    repo.add((String) newUserRequest[0] + "wallet",wallet);
+                    repo.add((String) user.userId + "wallet",wallet);
                     wallet.put(0);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

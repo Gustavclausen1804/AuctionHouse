@@ -37,7 +37,6 @@ public class TestClient implements Runnable {
             user.putUsertoServer(usersSpace);
             name = user.getUserName();
             user.setUserId((String) usersSpace.get(new FormalField(String.class),new ActualField(name))[0]);
-            System.out.println(user.getUserId());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -67,8 +66,8 @@ public class TestClient implements Runnable {
                 System.out.println((String) choice);
             }
             String choiceInput = input.readLine();
-            lobbySpace.put(parseInt(choiceInput),name);
-            lobbyChoice = lobbySpace.get(new FormalField(String.class),new ActualField(name));
+            lobbySpace.put(parseInt(choiceInput),user.getUserId());
+            lobbyChoice = lobbySpace.get(new FormalField(String.class),new ActualField(user.getUserId()));
             auctionSpace = new RemoteSpace(uri + (String) lobbyChoice[0] + "?keep");
             bidding();
             submitting();
@@ -97,37 +96,43 @@ public class TestClient implements Runnable {
                     lobbySelection();
                     return;
                 }
+                auction = new RemoteSpace(uri + "auction" + auctionChoice + "?keep");
+
+                new Thread(() -> {
+                    while (true) {
+                        try {
+                            String bid = input.readLine();
+                            if (Objects.equals(bid, "0")) {
+                                lobbySelection();
+                                return;
+                            }
+                            auction.put(user.getUserId(), name, parseInt(bid));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
                 while (true) {
                     try {
-                        auction = new RemoteSpace(uri + "auction" + auctionChoice + "?keep");
                         topBid = auction.get(new ActualField("topBid"), new FormalField(Integer.class), new FormalField(ArrayList.class));
                         seenList = (ArrayList<String>) topBid[2];
-                        if (seenList.contains(user.getUserId())) continue;
-                        System.out.println("after if");
+                        if (seenList.contains(user.getUserId())) {
+                            auction.put((String) topBid[0], (int) topBid[1], seenList);
+                            continue;
+                        }
                         seenList.add(user.getUserId());
                         auction.put((String) topBid[0], (int) topBid[1], seenList);
                         System.out.println("Current top bid: " + (int) topBid[1]);
                         //time = auction.query(new ActualField("time"), new FormalField(Long.class));
-                        new Thread(() -> {
-                            while (true) {
-                                try {
-                                    String bid = input.readLine();
-                                    auction.put(user.getUserId(), name, parseInt(bid));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }).start();
+
                         /*if ((long) time[1] <= 0) {
                             break;
                         }*/
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -149,7 +154,7 @@ public class TestClient implements Runnable {
                     return;
                 }
                 String[] itemArray = item.split("\\s+");
-                auctionSpace.put(itemArray[0], name, parseInt(itemArray[1]));
+                auctionSpace.put(itemArray[0], user.getUserId(), parseInt(itemArray[1]));
             } catch (IOException | InterruptedException | NumberFormatException e) {
                 throw new RuntimeException(e);
             }
@@ -158,7 +163,7 @@ public class TestClient implements Runnable {
     }
 
     public void depositFunds() {
-        if (Objects.equals((String) lobbyChoice[0], name + "wallet")) {
+        if (Objects.equals((String) lobbyChoice[0], user.getUserId() + "wallet")) {
             try {
                 int currentWallet = (int) auctionSpace.get(new FormalField(Integer.class))[0];
                 System.out.println("Current balance: " + currentWallet);
@@ -166,6 +171,7 @@ public class TestClient implements Runnable {
                 System.out.println("0. Go back");
                 String deposit = input.readLine();
                 if (Objects.equals(deposit,"0")) {
+                    auctionSpace.put(currentWallet);
                     lobbySelection();
                     return;
                 }
