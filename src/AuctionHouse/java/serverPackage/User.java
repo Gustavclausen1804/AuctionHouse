@@ -13,6 +13,7 @@ public class User {
     String userAddress;
     long userTimeStamp;
     Space userSpace;
+    int wallet;
 
 
     public User(String userName, String userAddress, long userTimeStamp, SpaceRepository mainRepository, Space usersSpace) throws InterruptedException {
@@ -24,12 +25,11 @@ public class User {
     }
 
 
-    public Space createUserSpace(SpaceRepository mainRepository) {
+    public Space createUserSpace(SpaceRepository mainRepository) throws InterruptedException {
         // Create a userSpace for the user
         SequentialSpace userSpace = new SequentialSpace();
-
         // Add the space to the repository
-        mainRepository.add(userId, userSpace);
+        mainRepository.add("user" + userId, userSpace);
 
 
         return userSpace;
@@ -52,12 +52,14 @@ public class User {
 
 
         }
+    }
 
-
+    public void depositToWallet(int deposit) {
+        wallet += deposit;
     }
 
 
-    }
+}
 
 
 
