@@ -24,9 +24,9 @@ public class TestClient implements Runnable {
     BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
     String uri;
     String name;
+    String choiceInput;
     User user;
     Object[] topBid;
-    Object[] time;
     ArrayList<String> seenList = new ArrayList<>();
     public void run() {
         try {
@@ -37,9 +37,7 @@ public class TestClient implements Runnable {
             user.putUsertoServer(usersSpace);
             name = user.getUserName();
             user.setUserId((String) usersSpace.get(new FormalField(String.class),new ActualField(name))[0]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         startup();
@@ -51,8 +49,6 @@ public class TestClient implements Runnable {
         try {
             uri = "tcp://127.0.0.1:9001/";
             lobbySpace = new RemoteSpace(uri + "lobby?keep");
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,23 +57,23 @@ public class TestClient implements Runnable {
 
     public void lobbySelection() {
         try {
-            Object[] choices = lobbySpace.query(new FormalField(String.class),new FormalField(String.class), new FormalField(String.class));
+            Object[] choices = lobbySpace.query(new FormalField(String.class),new FormalField(String.class), new FormalField(String.class), new FormalField(String.class));
             for (Object choice : choices) {
                 System.out.println((String) choice);
             }
-            String choiceInput = input.readLine();
+            choiceInput = input.readLine();
             lobbySpace.put(parseInt(choiceInput),user.getUserId());
             lobbyChoice = lobbySpace.get(new FormalField(String.class),new ActualField(user.getUserId()));
             auctionSpace = new RemoteSpace(uri + (String) lobbyChoice[0] + "?keep");
+
             bidding();
             submitting();
             depositFunds();
-        } catch (UnknownHostException e) {
+            viewInventory();
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (NumberFormatException e) {
+            System.out.println("Incorrect input");
         }
     }
 
@@ -107,9 +103,7 @@ public class TestClient implements Runnable {
                                 return;
                             }
                             auction.put(user.getUserId(), name, parseInt(bid));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
+                        } catch (IOException | InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
@@ -134,11 +128,7 @@ public class TestClient implements Runnable {
                         e.printStackTrace();
                     }
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (UnknownHostException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
+            } catch (InterruptedException | IOException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -157,6 +147,8 @@ public class TestClient implements Runnable {
                 auctionSpace.put(itemArray[0], user.getUserId(), parseInt(itemArray[1]));
             } catch (IOException | InterruptedException | NumberFormatException e) {
                 throw new RuntimeException(e);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Incorrect input");
             }
             lobbySelection();
         }
@@ -178,13 +170,31 @@ public class TestClient implements Runnable {
                 int newWallet = currentWallet + parseInt(deposit);
                 auctionSpace.put(newWallet);
                 System.out.println(newWallet);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
-            } catch (InterruptedException e) {
+            }
+            lobbySelection();
+        }
+    }
+
+
+    public void viewInventory() {
+        if (Objects.equals((String) lobbyChoice[0], "user" + user.getUserId())) {
+            try {
+                int counter = 1;
+                System.out.println("0. Go back");
+                List<Object[]> itemList = auctionSpace.queryAll(new FormalField(Item.class));
+                for (Object[] entry : itemList) {
+                    Item item = (Item) entry[0];
+                    System.out.println(counter + ": " + item.getName());
+                }
+                String goBack = input.readLine();
+                if (Objects.equals(goBack, "0")) {
+                    lobbySelection();
+                }
+            } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
         }
-        lobbySelection();
     }
-
 }

@@ -3,10 +3,9 @@ package serverPackage;
 import static java.lang.System.currentTimeMillis;
 
 public class Item {
-    private String name;
-    private String seller;
-    private int startingPrice;
-    private long startTime;
+    private final String name;
+    private final String seller;
+    private final int startingPrice;
     private long endTime;
 
     public Item(String name, String seller, int startingPrice) {
@@ -17,8 +16,9 @@ public class Item {
     }
 
     public void startAuction() {
-        this.startTime = currentTimeMillis();
-        this.endTime = currentTimeMillis() + 600 * 1000;
+        long startTime = currentTimeMillis();
+        //this.endTime = currentTimeMillis() + 600 * 1000;
+        this.endTime = currentTimeMillis() + 30000;
     }
 
     public String getName() {

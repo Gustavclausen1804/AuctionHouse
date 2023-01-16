@@ -76,8 +76,11 @@ public class Controller implements Runnable{
                         lobby.put("newAuctions",choice[1]);
                     }
                     else if ((int) choice[0] == 3) {
-                        System.out.println(choice[1] + "wallet");
                         lobby.put(choice[1] + "wallet",choice[1]);
+                    }
+                    else if ((int) choice[0] == 4) {
+                        System.out.println("user" + choice[1]);
+                        lobby.put("user" + choice[1],choice[1]);
                     }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
