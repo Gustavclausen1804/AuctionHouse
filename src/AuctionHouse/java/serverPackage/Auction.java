@@ -18,7 +18,7 @@ public class Auction {
     int userWallet;
     RemoteSpace walletSpace;
     RemoteSpace oldWalletSpace;
-    String uri = "tcp://127.0.0.1:52644/";
+    String uri = Main.serverAddress;
     public Auction(QueueSpace space,Item item) {
         this.auctionSpace = space;
         this.item = item;
