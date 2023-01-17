@@ -30,7 +30,10 @@ public class TestClient implements Runnable {
     ArrayList<String> seenList = new ArrayList<>();
     public void run() {
         try {
-            uri = "tcp://127.0.0.1:52644/";
+            System.out.println("Input Server IP:");
+            String ip = input.readLine();
+            uri = "tcp://" + ip + ":9001/";
+            //uri = "tcp://10.209.79.136:9001/";
             usersSpace = new RemoteSpace(uri + "users?keep");
             String[] userCreationInput = View.displayUsercreation();
             user = new User(userCreationInput[0], userCreationInput[1], System.currentTimeMillis());
@@ -47,7 +50,6 @@ public class TestClient implements Runnable {
         // Set the URI of the chat space
         // Default value
         try {
-            uri = "tcp://10.209.106.201:52644/";
             lobbySpace = new RemoteSpace(uri + "lobby?keep");
         } catch (IOException e) {
             e.printStackTrace();
