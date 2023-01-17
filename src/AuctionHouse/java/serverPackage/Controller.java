@@ -53,7 +53,7 @@ public class Controller implements Runnable{
 
     public void openGate() {
         try {
-            String uri = "tcp://127.0.0.1:9001/?keep";
+            String uri = "tcp://127.0.0.1:52644/?keep";
             URI myUri = new URI(uri);
             String gateUri = "tcp://" + myUri.getHost() + ":" + myUri.getPort() +  "?keep";
             repo.addGate(gateUri);

@@ -18,7 +18,7 @@ public class Auction {
     int userWallet;
     RemoteSpace walletSpace;
     RemoteSpace oldWalletSpace;
-    String uri = "tcp://127.0.0.1:9001/";
+    String uri = "tcp://127.0.0.1:52644/";
     public Auction(QueueSpace space,Item item) {
         this.auctionSpace = space;
         this.item = item;
@@ -36,8 +36,8 @@ public class Auction {
             String userId = "";
             long timeOfBid = 0;
             long oldTimeOfBid;
-
             while (currentTimeMillis() < item.getEndTime()) {
+
                 try {
                     ArrayList<String> seenList = new ArrayList<>();
                     //topBidTuple = auctionSpace.get(new FormalField(String.class), new FormalField(String.class), new FormalField(ArrayList.class));
