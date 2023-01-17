@@ -42,7 +42,7 @@ public class Auction {
                 userId = "";
                 long timeOfBid = 0;
                 long oldTimeOfBid;
-                while (currentTimeMillis() < item.getEndTime()) {
+                while (true) {
                     try {
                         ArrayList<String> seenList = new ArrayList<>();
                         auctionSpace.put("topBid", topBid, seenList, topUser);
@@ -101,6 +101,7 @@ public class Auction {
             sellerBalance += topBid;
             sellerWallet.put(sellerBalance);
             Controller.auctionSpace.get(new FormalField(Integer.class), new ActualField(item));
+            auctionSpace.put("end");
         } catch (UnknownHostException ex) {
             throw new RuntimeException(ex);
         } catch (IOException ex) {

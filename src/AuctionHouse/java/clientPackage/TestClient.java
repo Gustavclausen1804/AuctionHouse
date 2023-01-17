@@ -94,7 +94,14 @@ public class TestClient implements Runnable {
                     return;
                 }
                 auction = new RemoteSpace(uri + "auction" + auctionChoice + "?keep");
-
+                new Thread(() -> {
+                    try {
+                        auction.get(new ActualField("end"));
+                        System.out.println("The auction has ended.");
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
                 new Thread(() -> {
                     while (true) {
                         try {
