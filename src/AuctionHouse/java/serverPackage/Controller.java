@@ -10,7 +10,7 @@ public class Controller implements Runnable{
     SpaceRepository repo = new SpaceRepository();
     SequentialSpace lobby = new SequentialSpace();
     SequentialSpace usersSpace = new SequentialSpace();
-    QueueSpace auctionSpace = new QueueSpace();
+    public static QueueSpace auctionSpace = new QueueSpace();
     QueueSpace newAuctions = new QueueSpace();
     int counter = 0;
 

@@ -21,6 +21,7 @@ public class Item {
         this.endTime = currentTimeMillis() + 30000;
     }
 
+    public String getSeller() { return seller;}
     public String getName() {
         return name;
     }

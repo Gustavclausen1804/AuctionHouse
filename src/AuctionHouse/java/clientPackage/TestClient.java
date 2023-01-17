@@ -33,7 +33,6 @@ public class TestClient implements Runnable {
             System.out.println("Input Server IP:");
             String ip = input.readLine();
             uri = "tcp://" + ip + ":9001/";
-            //uri = "tcp://10.209.79.136:9001/";
             usersSpace = new RemoteSpace(uri + "users?keep");
             String[] userCreationInput = View.displayUsercreation();
             user = new User(userCreationInput[0], userCreationInput[1], System.currentTimeMillis());
@@ -112,15 +111,15 @@ public class TestClient implements Runnable {
                 }).start();
                 while (true) {
                     try {
-                        topBid = auction.get(new ActualField("topBid"), new FormalField(Integer.class), new FormalField(ArrayList.class));
+                        topBid = auction.get(new ActualField("topBid"), new FormalField(Integer.class), new FormalField(ArrayList.class), new FormalField(String.class));
                         seenList = (ArrayList<String>) topBid[2];
                         if (seenList.contains(user.getUserId())) {
-                            auction.put((String) topBid[0], (int) topBid[1], seenList);
+                            auction.put((String) topBid[0], (int) topBid[1], seenList, (String) topBid[3]);
                             continue;
                         }
                         seenList.add(user.getUserId());
-                        auction.put((String) topBid[0], (int) topBid[1], seenList);
-                        System.out.println("Current top bid: " + (int) topBid[1]);
+                        auction.put((String) topBid[0], (int) topBid[1], seenList, (String) topBid[3]);
+                        System.out.println("Current top bid: " + (int) topBid[1] + " by " + (String) topBid[3]);
                         //time = auction.query(new ActualField("time"), new FormalField(Long.class));
 
                         /*if ((long) time[1] <= 0) {
