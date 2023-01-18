@@ -145,7 +145,7 @@ public class TestClient implements Runnable {
                         System.out.println("The auction has ended.");
                         getTopBid.interrupt();
                         makeBid.interrupt();
-                        return;
+                        break;
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
