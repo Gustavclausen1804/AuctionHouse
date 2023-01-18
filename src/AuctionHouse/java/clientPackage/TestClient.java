@@ -94,25 +94,6 @@ public class TestClient implements Runnable {
                     return;
                 }
                 auction = new RemoteSpace(uri + "auction" + auctionChoice + "?keep");
-                final Thread waitForInput = new Thread(new Runnable()  {
-                    public void run() {
-                        while (true) {
-                            try {
-                                String bid = input.readLine();
-                                if (Objects.equals(bid, "0")) {
-                                    lobbySelection();
-                                    return;
-                                }
-                                auction.put(user.getUserId(), name, parseInt(bid));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                return;
-                            }
-                        }
-                    }
-                    });
-                waitForInput.start();
                 final Thread getTopbid = new Thread(new Runnable() {
                     public void run() {
                         while (true) {
@@ -137,6 +118,26 @@ public class TestClient implements Runnable {
                         }
                     }
                 });
+                final Thread waitForInput = new Thread(new Runnable()  {
+                    public void run() {
+                        while (true) {
+                            try {
+                                String bid = input.readLine();
+                                if (Objects.equals(bid, "0")) {
+                                    lobbySelection();
+                                    getTopbid.interrupt();
+                                    return;
+                                }
+                                auction.put(user.getUserId(), name, parseInt(bid));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                return;
+                            }
+                        }
+                    }
+                });
+                waitForInput.start();
                 getTopbid.start();
                 while (true) {
                     try {
