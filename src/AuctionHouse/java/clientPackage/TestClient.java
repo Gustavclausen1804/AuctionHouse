@@ -93,58 +93,52 @@ public class TestClient implements Runnable {
                     lobbySelection();
                     return;
                 }
+                System.out.println(auctionChoice);
                 auction = new RemoteSpace(uri + "auction" + auctionChoice + "?keep");
-                final Thread getTopbid = new Thread(new Runnable() {
-                    public void run() {
-                        while (true) {
-                            try {
-                                topBid = auction.get(new ActualField("topBid"), new FormalField(Integer.class), new FormalField(ArrayList.class), new FormalField(String.class));
-                                seenList = (ArrayList<String>) topBid[2];
-                                if (seenList.contains(user.getUserId())) {
-                                    auction.put((String) topBid[0], (int) topBid[1], seenList, (String) topBid[3]);
-                                    continue;
-                                }
-                                seenList.add(user.getUserId());
+                new Thread(() -> {
+                    while (true) {
+                        try {
+                            topBid = auction.get(new ActualField("topBid"), new FormalField(Integer.class), new FormalField(ArrayList.class), new FormalField(String.class));
+                            seenList = (ArrayList<String>) topBid[2];
+                            if (seenList.contains(user.getUserId())) {
                                 auction.put((String) topBid[0], (int) topBid[1], seenList, (String) topBid[3]);
-                                System.out.println("Current top bid: " + (int) topBid[1] + " by " + (String) topBid[3]);
-                                //time = auction.query(new ActualField("time"), new FormalField(Long.class));
+                                continue;
+                            }
+                            seenList.add(user.getUserId());
+                            auction.put((String) topBid[0], (int) topBid[1], seenList, (String) topBid[3]);
+                            System.out.println("Current top bid: " + (int) topBid[1] + " by " + (String) topBid[3]);
+                            //time = auction.query(new ActualField("time"), new FormalField(Long.class));
 
-                        /*if ((long) time[1] <= 0) {
-                            break;
-                        }*/
-                            } catch (InterruptedException e) {
-                                return;
-                            }
+                    /*if ((long) time[1] <= 0) {
+                        break;
+                    }*/
+                        } catch (InterruptedException e) {
+                            return;
                         }
                     }
-                });
-                final Thread waitForInput = new Thread(new Runnable()  {
-                    public void run() {
-                        while (true) {
-                            try {
-                                String bid = input.readLine();
-                                if (Objects.equals(bid, "0")) {
-                                    lobbySelection();
-                                    getTopbid.interrupt();
-                                    return;
-                                }
-                                auction.put(user.getUserId(), name, parseInt(bid));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
+                }).start();
+                new Thread(() ->  {
+                    while (true) {
+                        try {
+                            String bid = input.readLine();
+                            if (Objects.equals(bid, "0")) {
+                                lobbySelection();
+                                //getTopbid.interrupt();
                                 return;
                             }
+                            auction.put(user.getUserId(), name, parseInt(bid));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            return;
                         }
                     }
-                });
-                waitForInput.start();
-                getTopbid.start();
+                }).start();
                 while (true) {
                     try {
-                        auction.query(new ActualField("end"));
+                        Object[] end = auction.get(new ActualField("end"));
+                        auction.put((String) end[0]);
                         System.out.println("The auction has ended.");
-                        getTopbid.interrupt();
-                        waitForInput.interrupt();
                         lobbySelection();
                         return;
                     } catch (InterruptedException e) {

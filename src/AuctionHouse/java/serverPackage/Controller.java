@@ -41,6 +41,7 @@ public class Controller implements Runnable{
                     repo.add( "auction" + counter, auctionN);
                     Object[] newInput = newAuctions.get(new FormalField(String.class),new FormalField(String.class), new FormalField(Integer.class));
                     Item item = new Item((String) newInput[0], (String) newInput[1], (int) newInput[2]);
+                    System.out.println(item.getName());
                     auctionSpace.put(counter, item);
                     Auction auction = new Auction(auctionN, item);
                 } catch (InterruptedException e) {

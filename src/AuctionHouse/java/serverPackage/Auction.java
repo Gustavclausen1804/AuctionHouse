@@ -33,7 +33,7 @@ public class Auction {
     }
 
     public void startAuction() {
-        final Thread auction = new Thread(new Runnable() {
+        Thread auction = new Thread(new Runnable() {
             public void run() {
                 //auctionSpace.put("Starting bid: " + item.getStartingPrice());
                 topBid = item.getStartingPrice();
@@ -47,6 +47,7 @@ public class Auction {
                         ArrayList<String> seenList = new ArrayList<>();
                         auctionSpace.put("topBid", topBid, seenList, topUser);
                         bid = auctionSpace.get(new FormalField(String.class), new FormalField(String.class),new FormalField(Integer.class)); //userID, userName, bid size
+                        System.out.println("got bid");
                         oldTimeOfBid = timeOfBid;
                         timeOfBid = currentTimeMillis();
                         oldUserID = userId;
@@ -83,29 +84,34 @@ public class Auction {
             }
         });
         auction.start();
-        while (currentTimeMillis() <= item.getEndTime()) {
-            if (currentTimeMillis() == item.getEndTime()) {
-                auction.interrupt();
+
+        new Thread(() -> {
+            while (currentTimeMillis() <= item.getEndTime()) {
+                if (currentTimeMillis() == item.getEndTime()) {
+                    auction.interrupt();
+                    try {
+                        System.out.println(item.getName() + " sold for " + topBid + " kr to " + topUser);
+                        RemoteSpace userInventory = new RemoteSpace(uri + "user" + topUserID + "?keep");
+                        userInventory.put(item);
+                        String sellerID = item.getSeller();
+                        RemoteSpace sellerWallet = new RemoteSpace(uri + sellerID + "wallet?keep");
+                        int sellerBalance = (int) sellerWallet.get(new FormalField(Integer.class))[0];
+                        sellerBalance += topBid;
+                        sellerWallet.put(sellerBalance);
+                        Controller.auctionSpace.get(new FormalField(Integer.class), new ActualField(item));
+                        auctionSpace.put("end");
+                    } catch (UnknownHostException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    return;
+                }
             }
-        }
-        try {
-            System.out.println(item.getName() + " sold for " + topBid + " kr to " + topUser);
-            RemoteSpace userInventory = new RemoteSpace(uri + "user" + topUserID + "?keep");
-            userInventory.put(item);
-            String sellerID = item.getSeller();
-            RemoteSpace sellerWallet = new RemoteSpace(uri + sellerID + "wallet?keep");
-            int sellerBalance = (int) sellerWallet.get(new FormalField(Integer.class))[0];
-            sellerBalance += topBid;
-            sellerWallet.put(sellerBalance);
-            Controller.auctionSpace.get(new FormalField(Integer.class), new ActualField(item));
-            auctionSpace.put("end");
-        } catch (UnknownHostException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        }
+        }).start();
+
 
     }
 }
