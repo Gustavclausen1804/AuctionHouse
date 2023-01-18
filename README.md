@@ -9,5 +9,5 @@ To bid on something, simply type how much you want to bid.
 Unfortunately there are some errors that we couldn't resolve.
 1. There is no validation of inputs, so if you input something invalid the program will simply crash.
 2. When an auction you have bid on is finished, whether it is a single one or multiple, the lobby requires a few inputs before it functions as normal.
-This was simply due to inexperience with running parallel threads. Some methods don't end correctly when returning to the lobby sadly.
+This was simply due to inexperience with running parallel threads. Some methods don't end correctly when returning to the lobby.
 
