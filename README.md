@@ -1,4 +1,5 @@
 # AuctionHouse
+Change the IP in the server main to your machines IP to make sure the server runs correctly. When running the client you will first be prompted to enter ther servers ip.
 1. To bid on something you need money in your account. To do that, enter the number corresponding to "Deposit Funds". Here you enter how much money you want to deposit.
 INTEGER VALUES ONLY!
 2. To get an auction going you enter in the lobby the number corresponding to "Create new listing". Here you enter an item as follows: Example 1234
