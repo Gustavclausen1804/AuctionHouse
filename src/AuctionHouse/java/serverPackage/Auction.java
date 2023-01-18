@@ -52,7 +52,6 @@ public class Auction {
                         oldUserID = userId;
                         userId = (String) bid[0];
                         oldWalletSpace = new RemoteSpace(uri + oldUserID + "wallet?keep");
-                        System.out.println(uri + oldUserID + "wallet?keep");
                         walletSpace = new RemoteSpace(uri + userId + "wallet?keep");
                         userWallet = (int) walletSpace.get(new FormalField(Integer.class))[0];
                         if (userWallet >= (int) bid[2]) {
@@ -66,7 +65,6 @@ public class Auction {
                         if ((int) bid[2] > topBid || (int) bid[2] == topBid && timeOfBid < oldTimeOfBid) {
                             oldTopBid = topBid;
                             if (!Objects.equals(oldUserID, "")) {
-                                System.out.println("putting " + oldTopBid + " into " + oldUserID);
                                 int balance = (int) oldWalletSpace.get(new FormalField(Integer.class))[0];
                                 balance += oldTopBid;
                                 oldWalletSpace.put(balance);
@@ -75,7 +73,6 @@ public class Auction {
                             topUser = (String) bid[1];
                             topUserID = (String) bid[0];
                             auctionSpace.get(new ActualField("topBid"), new FormalField(Integer.class), new FormalField(ArrayList.class), new FormalField(String.class));
-                            System.out.println("Current top bid: " + topBid + "by " + topUser);
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -92,7 +89,7 @@ public class Auction {
             }
         }
         try {
-            System.out.println("Sold for " + topBid + " kr to " + topUser);
+            System.out.println(item.getName() + " sold for " + topBid + " kr to " + topUser);
             RemoteSpace userInventory = new RemoteSpace(uri + "user" + topUserID + "?keep");
             userInventory.put(item);
             String sellerID = item.getSeller();

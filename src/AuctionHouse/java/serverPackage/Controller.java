@@ -42,7 +42,6 @@ public class Controller implements Runnable{
                     Object[] newInput = newAuctions.get(new FormalField(String.class),new FormalField(String.class), new FormalField(Integer.class));
                     Item item = new Item((String) newInput[0], (String) newInput[1], (int) newInput[2]);
                     auctionSpace.put(counter, item);
-                    System.out.println(item.getName());
                     Auction auction = new Auction(auctionN, item);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -79,7 +78,6 @@ public class Controller implements Runnable{
                         lobby.put(choice[1] + "wallet",choice[1]);
                     }
                     else if ((int) choice[0] == 4) {
-                        System.out.println("user" + choice[1]);
                         lobby.put("user" + choice[1],choice[1]);
                     }
                 } catch (InterruptedException e) {
@@ -96,7 +94,7 @@ public class Controller implements Runnable{
                     Object[] newUserRequest = usersSpace.get(new FormalField(String.class), new FormalField(String.class), new FormalField(Long.class));
                     User user = new User((String) newUserRequest[0], (String) newUserRequest[1], (Long) newUserRequest[2], repo, usersSpace);
                     usersSpace.put(user.userId,user.userName);
-                    System.out.println(user.userId + " " + user.userAddress + " " + user.userTimeStamp + " " + user.userSpace);
+                    System.out.println(user.userId + " " + user.userAddress + " " + user.userTimeStamp + " " + user.userName);
                     SequentialSpace wallet = new SequentialSpace();
                     repo.add((String) user.userId + "wallet",wallet);
                     wallet.put(0);
