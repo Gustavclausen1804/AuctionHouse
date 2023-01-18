@@ -147,7 +147,7 @@ public class TestClient implements Runnable {
                         makeBid.interrupt();
                         break;
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        break;
                     }
                 }
             } catch (InterruptedException | IOException e) {
