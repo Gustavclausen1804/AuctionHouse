@@ -90,56 +90,61 @@ public class TestClient implements Runnable {
                 }
                 String auctionChoice = input.readLine();
                 if (Objects.equals(auctionChoice,"0")) {
-                    lobbySelection();
                     return;
                 }
-                System.out.println(auctionChoice);
                 auction = new RemoteSpace(uri + "auction" + auctionChoice + "?keep");
-                new Thread(() -> {
-                    while (true) {
-                        try {
-                            topBid = auction.get(new ActualField("topBid"), new FormalField(Integer.class), new FormalField(ArrayList.class), new FormalField(String.class));
-                            seenList = (ArrayList<String>) topBid[2];
-                            if (seenList.contains(user.getUserId())) {
+                Thread getTopBid = new Thread(new Runnable() {
+                    public void run() {
+                        while (true) {
+                            try {
+                                topBid = auction.get(new ActualField("topBid"), new FormalField(Integer.class), new FormalField(ArrayList.class), new FormalField(String.class));
+                                seenList = (ArrayList<String>) topBid[2];
+                                if (seenList.contains(user.getUserId())) {
+                                    auction.put((String) topBid[0], (int) topBid[1], seenList, (String) topBid[3]);
+                                    continue;
+                                }
+                                seenList.add(user.getUserId());
                                 auction.put((String) topBid[0], (int) topBid[1], seenList, (String) topBid[3]);
-                                continue;
-                            }
-                            seenList.add(user.getUserId());
-                            auction.put((String) topBid[0], (int) topBid[1], seenList, (String) topBid[3]);
-                            System.out.println("Current top bid: " + (int) topBid[1] + " by " + (String) topBid[3]);
-                            //time = auction.query(new ActualField("time"), new FormalField(Long.class));
+                                System.out.println("Current top bid: " + (int) topBid[1] + " by " + (String) topBid[3]);
+                                //time = auction.query(new ActualField("time"), new FormalField(Long.class));
 
-                    /*if ((long) time[1] <= 0) {
-                        break;
-                    }*/
-                        } catch (InterruptedException e) {
-                            return;
-                        }
-                    }
-                }).start();
-                new Thread(() ->  {
-                    while (true) {
-                        try {
-                            String bid = input.readLine();
-                            if (Objects.equals(bid, "0")) {
-                                lobbySelection();
-                                //getTopbid.interrupt();
+                                 /*if ((long) time[1] <= 0) {
+                                 break;
+                                 }*/
+                            } catch (InterruptedException e) {
                                 return;
                             }
-                            auction.put(user.getUserId(), name, parseInt(bid));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            return;
                         }
                     }
-                }).start();
+                });
+                Thread makeBid = new Thread(new Runnable() {
+                    public void run() {
+                        while (true) {
+                            try {
+                                String bid = input.readLine();
+                                if (Objects.equals(bid, "0")) {
+                                    lobbySelection();
+                                    //getTopbid.interrupt();
+                                    return;
+                                }
+                                auction.put(user.getUserId(), name, parseInt(bid));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                return;
+                            }
+                        }
+                    }
+                });
+                getTopBid.start();
+                makeBid.start();
                 while (true) {
                     try {
                         Object[] end = auction.get(new ActualField("end"));
                         auction.put((String) end[0]);
                         System.out.println("The auction has ended.");
-                        lobbySelection();
+                        getTopBid.interrupt();
+                        makeBid.interrupt();
                         return;
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
@@ -157,7 +162,6 @@ public class TestClient implements Runnable {
                 System.out.println("0. Go back");
                 String item = input.readLine();
                 if (Objects.equals(item,"0")) {
-                    lobbySelection();
                     return;
                 }
                 String[] itemArray = item.split("\\s+");
@@ -167,7 +171,6 @@ public class TestClient implements Runnable {
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("Incorrect input");
             }
-            lobbySelection();
         }
     }
 
@@ -181,7 +184,6 @@ public class TestClient implements Runnable {
                 String deposit = input.readLine();
                 if (Objects.equals(deposit,"0")) {
                     auctionSpace.put(currentWallet);
-                    lobbySelection();
                     return;
                 }
                 int newWallet = currentWallet + parseInt(deposit);
@@ -190,7 +192,6 @@ public class TestClient implements Runnable {
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
-            lobbySelection();
         }
     }
 
@@ -209,10 +210,12 @@ public class TestClient implements Runnable {
                 String goBack = input.readLine();
                 if (Objects.equals(goBack, "0")) {
                     lobbySelection();
+                    return;
                 }
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
         }
+        lobbySelection();
     }
 }
